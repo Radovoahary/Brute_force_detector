@@ -35,8 +35,12 @@ function main()
     let temps = new Date(t);
     for (let i = 0; i < 50; i++)
     {
-        temps = new Date(temps.getTime + (1+Math.random() * 4) * 1000);
-        
+        temps = new Date(temps.getTime() + (1+Math.random() * 4) * 1000);
+         const user = utilisateurs[Math.floor(Math.random() * utilisateurs.length)];
+        lignes.push({
+             date: temps,
+             ligne: genererLigne(temps, ip, user, false) 
+            });
     }
   }
 }
