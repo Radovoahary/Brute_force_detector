@@ -14,3 +14,29 @@ function FormaterDate(date)
     const s = String(date.getSeconds()).padStart(2, '0');
     return `${mois[date.getMonth()]} ${jour} ${h}:${m}:${s}`;
 }
+
+function genererLigne(date, ip, utilisateur, succes)
+{
+    const action = succes ? 'Accepted' : 'Failded';
+    const pid = Math.floor(1000 + Math.random() * 9000);
+    const port = Math.floor(1024 + Math.random() * 64000);
+    return `${formaterDate(date)} server sshd[${pid}]: ${action} password for ${utilisateur} from ${ip} port ${port} ssh2`;
+}
+
+function main()
+{
+    const lignes = [];
+    let t = new Date(Date.now() - 2 * 60 * 60 * 1000); //Il y a 2 heures
+
+
+  // --- Simule une attaque brute force : beaucoup d'échecs rapprochés ---
+  for (const ip of ipsAttaquantes)
+  {
+    let temps = new Date(t);
+    for (let i = 0; i < 50; i++)
+    {
+        temps = new Date(temps.getTime + (1+Math.random() * 4) * 1000);
+        
+    }
+  }
+}
