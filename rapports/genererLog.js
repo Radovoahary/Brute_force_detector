@@ -58,4 +58,12 @@ function main()
     lignes.push({ date: temps, ligne: genererLigne(temps, ip, 'julien', true) });
   }
   
+   // On trie chronologiquement, comme un vrai fichier de log
+   lignes.sort((a, b) => a.date - b.date);
+   
+   const contenu = lignes.map(l => l.ligne).join('\n') + '\n';
+   fs.writeFileSync('logs/auth_test.log', contenu);
+   console.log(`${lignes.length} lignes générées dans logs/auth_test.log`);
 }
+
+main();
