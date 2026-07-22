@@ -43,4 +43,18 @@ function main()
             });
     }
   }
+
+  //Simulation d'un traffic normal
+  for (const ip of ipsNormales)
+  {
+    let temps = new Date(t);
+    const nbEchecs = 1 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < nbEchecs; i++)
+    {
+      temps = new Date(temps.getTime() + (60 + Math.random() * 540) * 1000);
+      lignes.push({ date: temps, ligne: genererLigne(temps, ip, 'julien', false) });
+    }
+    temps = new Date(temps.getTime() + (60 + Math.random() * 540) * 1000)
+    lignes.push({ date: temps, ligne: genererLigne(temps, ip, 'julien', false) });
+  }
 }
