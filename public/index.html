@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Détecteur de Brute Force</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 700px; margin: 40px auto; background: #f4f6f8; }
+  h1 { color: #1a1a2e; }
+  .config { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+  input { padding: 6px; width: 60px; }
+  button { padding: 8px 16px; background: #1a1a2e; color: white; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px; }
+  button:hover { background: #333; }
+  .resultats { margin-top: 20px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+  th, td { padding: 8px 12px; border-bottom: 1px solid #ddd; text-align: left; }
+  th { background: #1a1a2e; color: white; }
+  .alerte { color: #c0392b; font-weight: bold; }
+  .stats { display: flex; gap: 20px; margin: 15px 0; }
+  .stat-box { background: white; padding: 12px 20px; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+  .stat-box .valeur { font-size: 24px; font-weight: bold; }
+  .stat-box .label { font-size: 12px; color: #666; }
+</style>
+</head>
+<body>
+
+<h1>🔍 Détecteur de Brute Force SSH</h1>
+
+<div class="config">
+  <label>Seuil d'alerte (tentatives échouées) : </label>
+  <input type="number" id="seuil" value="5" min="1">
+  <button onclick="lancerAnalyse()">Lancer l'analyse</button>
+</div>
+
+<div class="resultats" id="resultats"></div>
+
+<script>
+async function lancerAnalyse() {
+  const seuil = document.getElementById('seuil').value;
+  const div = document.getElementById('resultats');
+  div.innerHTML = '<p>Analyse en cours...</p>';
+
+  const reponse = await fetch('/api/analyser', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ seuil })
+  });
+  const data = await reponse.json();
+
+  if (data.erreur) {
+    div.innerHTML = `<p class="alerte">Erreur : ${data.erreur}</p>`;
+    return;
+  }
+
+  let html = `
+    <div class="stats">
+      <div class="stat-box"><div class="valeur">${data.totalLignes}</div><div class="label">Lignes analysées</div></div>
+      <div class="stat-box"><div class="valeur">${data.totalEchecs}</div><div class="label">Échecs</div></div>
+      <div class="stat-box"><div class="valeur">${data.nbIPDistinctes}</div><div class="label">IP distinctes</div></div>
+      <div class="stat-box"><div class="valeur">${data.suspectes.length}</div><div class="label">IP suspectes</div></div>
+    </div>
+  `;
+
+  html += '<h3>⚠️ IP suspectes</h3>';
+  if (data.suspectes.length === 0) {
+    html += '<p>Aucune IP suspecte détectée.</p>';
+  } else {
+    html += '<table><tr><th>IP</th><th>Tentatives échouées</th></tr>';
+    for (const s of data.suspectes) {
+      html += `<tr class="alerte"><td>${s.ip}</td><td>${s.tentatives}</td></tr>`;
+    }
+    html += '</table>';
+  }
+
+  html += '<h3>Top utilisateurs ciblés</h3><table><tr><th>Utilisateur</th><th>Tentatives</th></tr>';
+  for (const u of data.topUtilisateurs) {
+    html += `<tr><td>${u.utilisateur}</td><td>${u.tentatives}</td></tr>`;
+  }
+  html += '</table>';
+
+  div.innerHTML = html;
+}
+</script>
+
+</body>
+</html>
