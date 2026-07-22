@@ -54,9 +54,8 @@ function main()
       temps = new Date(temps.getTime() + (60 + Math.random() * 540) * 1000);
       lignes.push({ date: temps, ligne: genererLigne(temps, ip, 'julien', false) });
     }
-    temps = new Date(temps.getTime() + (60 + Math.random() * 540) * 1000)
-    lignes.push({ date: temps, ligne: genererLigne(temps, ip, 'julien', false) });
-  }
-   temps = new Date(temps.getTime() + 5000);
+    temps = new Date(temps.getTime() + 5000);
     lignes.push({ date: temps, ligne: genererLigne(temps, ip, 'julien', true) });
+  }
+  
 }
