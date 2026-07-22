@@ -20,7 +20,7 @@ function genererLigne(date, ip, utilisateur, succes)
     const action = succes ? 'Accepted' : 'Failded';
     const pid = Math.floor(1000 + Math.random() * 9000);
     const port = Math.floor(1024 + Math.random() * 64000);
-    return `${formaterDate(date)} server sshd[${pid}]: ${action} password for ${utilisateur} from ${ip} port ${port} ssh2`;
+    return `${FormaterDate(date)} server sshd[${pid}]: ${action} password for ${utilisateur} from ${ip} port ${port} ssh2`;
 }
 
 function main()
